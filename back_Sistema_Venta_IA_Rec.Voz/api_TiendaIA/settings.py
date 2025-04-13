@@ -66,6 +66,8 @@ MIDDLEWARE = [
 
 CORS_ALLOW_ALL_ORIGINS = True
 
+# Si estás usando cookies o autenticación por sesión entre dominios:
+CORS_ALLOW_CREDENTIALS = True
 
 ROOT_URLCONF = 'api_TiendaIA.urls'
 
