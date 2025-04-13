@@ -7,7 +7,7 @@ services:
     restart: always
     environment:
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres 
+      - POSTGRES_PASSWORD=071104 
       - POSTGRES_DB=DB_PuntoVenta
     ports:
       - "5432:5432"
