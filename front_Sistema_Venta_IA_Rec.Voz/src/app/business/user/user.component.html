@@ -1,0 +1,127 @@
+<div class="p-6 bg-gray-100 min-h-screen">
+    <h1 class="text-2xl font-bold text-gray-700 mb-4">Gestión de Usuarios-Empleados</h1>
+
+    <!-- Botón para mostrar el formulario -->
+    <button class="mb-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600" (click)="toggleForm()">
+        {{ showForm ? 'Cerrar Formulario' : 'Agregar Usuario' }}
+    </button>
+
+    <!-- Formulario para agregar usuario -->
+    <div *ngIf="showForm" class="bg-white p-4 shadow-md rounded mb-4">
+        <h2 class="text-xl font-bold mb-4">Nuevo Usuario</h2>
+        <form (ngSubmit)="addUser()">
+            <div class="mb-4">
+                <label class="block text-gray-700">Nombre:</label>
+                <input type="text" [(ngModel)]="newEmpleado.nombre_completo" name="name" class="w-full px-3 py-2 border rounded"
+                    placeholder="Ingresa el nombre" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Direccion:</label>
+                <input type="email" [(ngModel)]="newEmpleado.direccion" name="email" class="w-full px-3 py-2 border rounded"
+                    placeholder="Ingresa el correo" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Teléfono:</label>
+                <input type="tel" [(ngModel)]="newEmpleado.telefono" name="phone" class="w-full px-3 py-2 border rounded"
+                    placeholder="Ingresa el teléfono" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Estado:</label>
+                <select [(ngModel)]="newEmpleado.estado" name="role" class="w-full px-3 py-2 border rounded" required>
+                    <option value="" disabled selected>Selecciona un Estado</option>
+                    <option value="activo">activo</option>
+                    <option value="eliminado">eliminado</option>
+                </select>
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Fecha de Nacimiento:</label>
+                <input type="date" [(ngModel)]="newEmpleado.fecha_nacimiento" name="birthDate"
+                    class="w-full px-3 py-2 border rounded" required />
+            </div>
+
+            <div class="mb-4">
+                <label class="block text-gray-700">Rol:</label>
+                <select [(ngModel)]="newEmpleado.rol" name="role" class="w-full px-3 py-2 border rounded" required>
+                    <option value="" disabled selected>Selecciona un rol</option>
+                    <option value="Administrador">Administrador</option>
+                    <option value="Empleado">Empleado</option>
+                </select>
+            </div>
+
+            <!-- Solo se muestra al agregar -->
+            <div *ngIf="!editar">
+                <div class="mb-4">
+                    <label class="block text-gray-700">Username:</label>
+                    <input type="text" [(ngModel)]="newUsername" name="username"
+                        class="w-full px-3 py-2 border rounded" placeholder="Ingresa el username" required />
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Email:</label>
+                    <input type="email" [(ngModel)]="newUser.email" name="email"
+                        class="w-full px-3 py-2 border rounded" placeholder="Ingresa el email" required />
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-gray-700">Password:</label>
+                    <input type="password" [(ngModel)]="newUser.password" name="password"
+                        class="w-full px-3 py-2 border rounded" placeholder="Ingresa el password" required />
+                </div>
+            </div>
+
+
+            <div class="flex gap-4">
+                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+                    Guardar
+                </button>
+                <button type="button" (click)="toggleForm()"
+                    class="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600">
+                    Cancelar
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabla de usuarios -->
+    <div class="overflow-x-auto bg-white shadow-md rounded">
+        <table class="w-full text-left border-collapse text-sm"> <!-- Añadir "text-sm" para fuente más pequeña -->
+            <thead>
+                <tr class="bg-gray-200">
+                    <th class="py-2 px-4 border-b">ID</th>
+                    <th class="py-2 px-4 border-b">Nombre</th>
+                    <th class="py-2 px-4 border-b">Direccion</th>
+                    <th class="py-2 px-4 border-b">Teléfono</th>
+                    <th class="py-2 px-4 border-b">estado</th>
+                    <th class="py-2 px-4 border-b">Fecha de Nacimiento</th>
+                    <th class="py-2 px-4 border-b">Rol</th>
+                    <th class="py-2 px-4 border-b">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let empleado of empleados" class="hover:bg-gray-100">
+                    <td class="py-2 px-4 border-b">{{ empleado.id_usuario }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.nombre_completo }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.direccion }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.telefono }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.estado }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.fecha_nacimiento }}</td>
+                    <td class="py-2 px-4 border-b">{{ empleado.rol }}</td>
+                    <td class="py-2 px-4 border-b">
+                        <button class="bg-yellow-500 text-white py-1 px-2 rounded hover:bg-yellow-600 mr-2"
+                            (click)="editUser(empleado.nombre_completo)">
+                            Editar
+                        </button>
+                        <button class="bg-red-500 text-white py-1 px-2 rounded hover:bg-red-600"
+                            (click)="deleteUser(empleado.nombre_completo)">
+                            Eliminar
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
