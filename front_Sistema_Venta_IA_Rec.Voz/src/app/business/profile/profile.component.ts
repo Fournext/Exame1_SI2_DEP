@@ -32,52 +32,66 @@ export default class ProfileComponent implements OnInit {
 
 
   newEmpleado: Empleado = {
-      nombre_completo: '',
-      direccion: '',
-      telefono: '',
-      rol: '',
-      fecha_nacimiento: new Date(),
-      estado: 'Activo',
-      username: ''
-    };
-  
-    newUser: Usuario = {
-      username: '',
-      email: '',
-      password: '',
-      tipo_usuario: "empleado",
-      estado: "activo"
-    };
+    nombre_completo: '',
+    direccion: '',
+    telefono: '',
+    rol: '',
+    fecha_nacimiento: new Date(),
+    estado: 'Activo',
+    username: ''
+  };
 
-    getUsuario(): void {
-      if (this.id !== null) {
-        this._usuarioservices.getUser(this.id).subscribe(
-          (data) => {
-            this.newUser = data;
-          },
-          (error) => {
-            this.toastr.error('Error al obtener los datos del usuario', 'Error');
-          }
-        );
-      } else {
-        this.toastr.warning('ID de usuario no definido', 'Advertencia');
-      }
+  newUser: Usuario = {
+    username: '',
+    email: '',
+    password: '',
+    tipo_usuario: "empleado",
+    estado: "activo"
+  };
+
+  getUsuario(): void {
+    if (this.id !== null) {
+      this._usuarioservices.getUser(this.id).subscribe(
+        (data) => {
+          this.newUser = data;
+        },
+        (error) => {
+          this.toastr.error('Error al obtener los datos del usuario', 'Error');
+        }
+      );
+    } else {
+      this.toastr.warning('ID de usuario no definido', 'Advertencia');
     }
+  }
 
-    getEmpleados(): void {
-      if (this.id !== null) {
-        this._empleadoservices.get_Empleado_ID_User(this.id).subscribe(
-          (data) => {
-            this.newEmpleado = data;
-          },
-          (error) => {
-            this.toastr.error('Error al obtener los datos del empleado', 'Error');
-          }
-        );
-      } else {
-        this.toastr.warning('ID de usuario no definido', 'Advertencia');
-      }
+  getEmpleados(): void {
+    if (this.id !== null) {
+      this._empleadoservices.get_Empleado_ID_User(this.id).subscribe(
+        (data) => {
+          this.newEmpleado = data;
+        },
+        (error) => {
+          this.toastr.error('Error al obtener los datos del empleado', 'Error');
+        }
+      );
+    } else {
+      this.toastr.warning('ID de usuario no definido', 'Advertencia');
     }
-    
+  }
 
+  //parte de codigo para subir foto de perfil
+  selectedImage: string | null = null; // Propiedad para la vista previa
+
+  onImageUpload(event: Event): void {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.selectedImage = reader.result as string; // Vista previa de la imagen seleccionada
+      };
+      reader.readAsDataURL(file);
+    }
+  }
 }
