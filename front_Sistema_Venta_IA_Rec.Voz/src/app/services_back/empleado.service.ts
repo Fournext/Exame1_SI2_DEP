@@ -39,5 +39,4 @@ export class EmpleadoService {
   eliminar_Empleado(empleado: Empleado):Observable<void> {
     return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}/eliminar`,empleado);
   }
-
 }

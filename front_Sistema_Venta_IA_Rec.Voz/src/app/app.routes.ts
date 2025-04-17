@@ -1,8 +1,7 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './business/Protection _outes/auth.guard';
 
-export const routes: Routes = [
-    
+export const routes: Routes = [ 
     {
         path: '',
         redirectTo: 'login',
@@ -15,7 +14,6 @@ export const routes: Routes = [
     },
     
     {
-
         path: '',
         canActivate: [authGuard],
         loadComponent: () => import('./shared/components/layout/layout.component'),
@@ -57,7 +55,6 @@ export const routes: Routes = [
             }
             */
         ]
-
     },
     //Redireccionar al Dashboard si direccionan a cualquier ruta des conocida
     {

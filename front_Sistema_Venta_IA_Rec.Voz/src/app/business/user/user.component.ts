@@ -50,9 +50,6 @@ export default class UserComponent implements OnInit {
     estado: "activo"
   };
 
-  
-  
-  
   showForm = false;
   editar=false;
   
@@ -160,5 +157,4 @@ export default class UserComponent implements OnInit {
       }
     });
   }
-  
 }
