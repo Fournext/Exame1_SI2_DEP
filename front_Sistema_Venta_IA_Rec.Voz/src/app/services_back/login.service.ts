@@ -49,5 +49,21 @@ export class LoginService {
       return null;
     }
   }
+
+  recover_password(email: string):Observable<string> {
+    return this.http.post<string>(`${this.myAppUrl}api/recuperar_password/enviarEMAIL`,{email});
+  }
+
+  verif_cod(codigo: string):Observable<string> {
+    return this.http.post<string>(`${this.myAppUrl}api/recuperar_password/verificarCOD`,{codigo});
+  }
+
+  username_email(email: string):Observable<any> {
+    return this.http.get<any>(`${this.myAppUrl}${this.myApiUrl}/username_email/${email}`,{});
+  }
+
+  new_password(username: String, password: String):Observable<string> {
+    return this.http.post<string>(`${this.myAppUrl}${this.myApiUrl}/newPassword/${username}`,{password});
+  }
   
 }

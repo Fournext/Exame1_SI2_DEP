@@ -50,11 +50,22 @@ export default class UserComponent implements OnInit {
     estado: "activo"
   };
 
+  permisoSeleccionado = {
+    ventana: '',
+    ver: false,
+    insertar: false,
+    editar: false,
+    eliminar: false,
+  };
   
   
   
   showForm = false;
   editar=false;
+
+  showPermisos: boolean = false;
+  permisosUsername: string = '';
+  ventanasDisponibles: string[] = ['Inventario', 'Ventas', 'Clientes', 'Reportes']; // Ajusta según tus ventanas
   
 
   ngOnInit(): void {
@@ -159,6 +170,30 @@ export default class UserComponent implements OnInit {
         this.toastr.error('Error al obtener los datos del empleado');
       }
     });
+  }
+
+
+  abrirPermisos(username: string) {
+    this.showPermisos = true;
+    this.permisosUsername = username;
+  
+    // Puedes cargar permisos existentes aquí si los estás guardando en base de datos
+    this.permisoSeleccionado = {
+      ventana: '',
+      ver: false,
+      insertar: false,
+      editar: false,
+      eliminar: false,
+    };
+  }
+  guardarPermiso() {
+    console.log(`Guardando permisos para ${this.permisosUsername}`, this.permisoSeleccionado);
+    this.toastr.success('Permisos guardados exitosamente');
+    this.showPermisos = false;
+  }
+  
+  cancelarPermisos() {
+    this.showPermisos = false;
   }
   
 }

@@ -55,6 +55,8 @@ def agregar_permiso(request):
     tipo_editar = request.data.get('editar')
     tipo_eliminar = request.data.get('eliminar')
     tipo_ver = request.data.get('ver')
+    tipo_ventana = request.data.get('ventana')
+
 
     if not username:
         return Response({'error': 'El username y los permisos son obligatorios'}, status=status.HTTP_400_BAD_REQUEST)
@@ -62,8 +64,8 @@ def agregar_permiso(request):
     try:
         with connection.cursor() as cursor:
             cursor.execute(
-                "CALL insertar_permisos(%s, %s, %s, %s, %s)", 
-                [username, tipo_crear, tipo_editar, tipo_eliminar, tipo_ver]
+                "CALL insertar_permisos(%s, %s, %s, %s, %s, %s)", 
+                [username, tipo_ventana, tipo_crear, tipo_editar, tipo_eliminar, tipo_ver]
             )
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -100,4 +102,15 @@ def obtener_usuario_por_id(request, id_usuario):
         return Response(serializer.data, status=status.HTTP_200_OK)
     except Usuario.DoesNotExist:
         return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+
+@api_view(['GET'])
+def obtener_username_por_email(request, email):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT obtener_username_por_email(%s)", [email])
+            username = cursor.fetchone()[0]
+            return Response({'username': username}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
 

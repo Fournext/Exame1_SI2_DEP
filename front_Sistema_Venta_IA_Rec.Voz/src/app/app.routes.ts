@@ -13,6 +13,14 @@ export const routes: Routes = [
         path: 'login',
         loadComponent: () => import('./business/login/login.component')
     },
+    {
+        path: 'recover_password',
+        loadComponent: () => import('./business/recover-password/recover-password.component')
+    },
+    {
+        path: 'new_password',
+        loadComponent: () => import('./business/recover-password/new-password/new-password.component')
+    },
     
     {
 

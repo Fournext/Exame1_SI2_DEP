@@ -5,11 +5,11 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { LoginService } from '../../services_back/login.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Usuario } from '../../../interface/user';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, RouterModule],
   standalone: true,
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
