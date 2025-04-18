@@ -9,6 +9,9 @@ import { Categoria } from '../../../interface/categoria';
 import { CategoriaService } from '../../services_back/categoria.service';
 import { MarcaService } from '../../services_back/marca.service';
 import { Marca } from '../../../interface/marca';
+import LoginComponent from '../login/login.component';
+import { LoginService } from '../../services_back/login.service';
+import { Permisos } from '../../../interface/permisos';
 
 
 @Component({
@@ -25,6 +28,7 @@ export default class ProductComponent implements OnInit {
     private _categoriaServices: CategoriaService,
     private _marcaServices: MarcaService,
     private toastr: ToastrService,
+    private _userServices: LoginService,
     private router: Router,
   ) { }
 
@@ -32,12 +36,26 @@ export default class ProductComponent implements OnInit {
     this.getProducto();
     this.getCategorias();
     this.getMarcas();
+    this.getPermisos();
   }
 
   getProducto() {
     this._productoServices.getProductos_Todo().subscribe((data)=>{
       this.productos = data;
     })
+  }
+
+  getPermisos(){
+    var id_user = this._userServices.getUserIdFromToken();
+    this._userServices.getUser(id_user || 0).subscribe((data)=>{
+      this.username = data.username;
+      this._userServices.get_permisos_user_ventana(this.username,"Productos").subscribe((data)=>{
+        this.perm_insertar = data.insertar;
+        this.perm_editar = data.editar;
+        this.perm_eliminar = data.eliminar;
+        this.perm_ver = data.ver;
+      });
+    });
   }
 
   getCategorias() {
@@ -77,6 +95,13 @@ export default class ProductComponent implements OnInit {
     nombre: '',
     descripcion_marca: '',
   };
+
+  username: string = '';
+
+  perm_insertar: string = '';
+  perm_editar: string = '';
+  perm_eliminar: string = '';
+  perm_ver: string = '';
 
   toggleForm() {
     this.showForm = !this.showForm;

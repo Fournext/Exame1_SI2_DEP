@@ -74,5 +74,7 @@ export class LoginService {
   get_permisos_user(username: string):Observable<Permisos[]> {
     return this.http.get<Permisos[]>(`${this.myAppUrl}${this.myApiUrl}/getpermisosUser/${username}`,{});
   }
-  
+  get_permisos_user_ventana(username: string,ventana: string):Observable<any> {
+    return this.http.get<any>(`${this.myAppUrl}${this.myApiUrl}/getpermisosUser_Ventana/${username}/${ventana}`,{});
+  }
 }

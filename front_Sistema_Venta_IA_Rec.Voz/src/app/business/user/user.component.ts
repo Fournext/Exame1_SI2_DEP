@@ -68,7 +68,7 @@ export default class UserComponent implements OnInit {
 
   showPermisos: boolean = false;
   permisosUsername: string = '';
-  ventanasDisponibles: string[] = ['Inventario', 'Ventas', 'Clientes', 'Reportes','Empleados']; // Ajusta según tus ventanas
+  ventanasDisponibles: string[] = ['Inventario', 'Ventas', 'Clientes', 'Reportes','Empleados','Productos','Categoria','Marca']; // Ajusta según tus ventanas
   
 
   ngOnInit(): void {

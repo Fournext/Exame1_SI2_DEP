@@ -87,6 +87,29 @@ def obtener_permisos_usuario(request, username):
             return Response({'permisos': resultados}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+def obtener_permisos_usuario_ventana(request, username, ventana):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM get_permisos_usuario_ventana(%s, %s)", [username, ventana])
+            columnas = [col[0] for col in cursor.description]
+            fila = cursor.fetchone()
+
+            if fila:
+                permisos = dict(zip(columnas, fila))
+            else:
+                # Si no hay datos, devolvemos todo en false
+                permisos = {
+                    'insertar': False,
+                    'editar': False,
+                    'eliminar': False,
+                    'ver': False
+                }
+
+            return Response(permisos, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 
