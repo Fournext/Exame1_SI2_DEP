@@ -1,56 +1,63 @@
 <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-md">
-    <!-- Encabezado -->
-    <div class="text-center mb-6">
-      <img src="assets/default-profile.png" alt="User Profile Picture"
-           class="w-24 h-24 mx-auto rounded-full border-4 border-blue-500" />
-      <h2 class="mt-4 text-xl font-bold text-blue-gray-900">{{ newEmpleado.nombre_completo }}</h2>
-      <p class="text-sm text-blue-gray-600">{{ newEmpleado.username }}</p>
+  <!-- Encabezado -->
+  <div class="text-center mb-6">
+    <!-- Imagen del perfil -->
+    <img [src]="selectedImage || 'assets/default-profile.png'" alt="User Profile Picture"
+      class="w-32 h-32 mx-auto rounded-full border-4 border-blue-500 shadow-md" /> <!-- Imagen más grande -->
+    <!-- Botón mejorado para cambiar la foto -->
+    <label class="mt-4 inline-block px-3 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm font-semibold rounded-lg shadow-lg cursor-pointer hover:opacity-90 transition duration-300">
+      Subir Foto de Perfil
+      <input type="file" class="hidden" (change)="onImageUpload($event)" />
+    </label>
+    <!-- Información del perfil -->
+    <h2 class="mt-4 text-xl font-bold text-blue-gray-900">{{ newEmpleado.nombre_completo }}</h2>
+    <p class="text-sm text-blue-gray-600">{{ newEmpleado.rol }}</p>
+  </div>
+
+
+  <!-- Información del usuario -->
+  <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+    <div>
+      <label class="block text-sm font-medium text-blue-gray-700">Nombre</label>
+      <input type="text"
+        class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+        [value]="newEmpleado.nombre_completo" disabled />
     </div>
-  
-    <!-- Información del usuario -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <div>
-        <label class="block text-sm font-medium text-blue-gray-700">Nombre</label>
-        <input type="text"
-               class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-               [value]="newEmpleado.nombre_completo" disabled />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-blue-gray-700">Correo Electrónico</label>
-        <input type="email"
-               class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-               [value]="newUser.email" disabled />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-blue-gray-700">Teléfono</label>
-        <input type="text"
-               class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-               [value]="newEmpleado.telefono" disabled />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-blue-gray-700">Dirección</label>
-        <input type="text"
-               class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-               [value]="newEmpleado.direccion" disabled />
-      </div>
-      <div>
-        <label class="block text-sm font-medium text-blue-gray-700">Fecha de nacimiento</label>
-        <input type="text"
-               class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
-               [value]="newEmpleado.fecha_nacimiento | date:'dd/MM/yyyy'" disabled />
-      </div>
+    <div>
+      <label class="block text-sm font-medium text-blue-gray-700">Correo Electrónico</label>
+      <input type="email"
+        class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+        [value]="newUser.email" disabled />
     </div>
-  
-    <!-- Botones -->
-    <div class="mt-6 flex justify-between">
-      <button
-        class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
-        Editar Información
-      </button>
-      <button
-        class="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:ring-opacity-75">
-        Cambiar Contraseña
-      </button>
+    <div>
+      <label class="block text-sm font-medium text-blue-gray-700">Teléfono</label>
+      <input type="text"
+        class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+        [value]="newEmpleado.telefono" disabled />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-blue-gray-700">Dirección</label>
+      <input type="text"
+        class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+        [value]="newEmpleado.direccion" disabled />
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-blue-gray-700">Fecha de nacimiento</label>
+      <input type="text"
+        class="mt-1 block w-full border border-blue-gray-300 rounded-lg text-sm p-2 focus:ring-blue-500 focus:border-blue-500"
+        [value]="newEmpleado.fecha_nacimiento | date:'dd/MM/yyyy'" disabled />
     </div>
   </div>
-  
+
+  <!-- Botones -->
+  <div class="mt-6 flex justify-between">
+    <button
+      class="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-blue-600 focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">
+      Editar Información
+    </button>
+    <button
+      class="px-4 py-2 bg-red-500 text-white text-sm font-medium rounded-lg shadow-md hover:bg-red-600 focus:ring-2 focus:ring-red-400 focus:ring-opacity-75">
+      Cambiar Contraseña
+    </button>
+  </div>
+</div>

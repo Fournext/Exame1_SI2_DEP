@@ -9,6 +9,7 @@ import { Empleado } from '../../../interface/empleado';
 import { get } from 'http';
 import { Usuario } from '../../../interface/user';
 import { LoginService } from '../../services_back/login.service';
+import { Permisos } from '../../../interface/permisos';
 
 
 @Component({
@@ -29,6 +30,7 @@ export default class UserComponent implements OnInit {
 
 
   empleados:Empleado[]=[];
+  permisos:Permisos[]=[];
   newUsername: string = ''; 
 
 
@@ -51,6 +53,7 @@ export default class UserComponent implements OnInit {
   };
 
   permisoSeleccionado = {
+    username: '',
     ventana: '',
     ver: false,
     insertar: false,
@@ -65,7 +68,7 @@ export default class UserComponent implements OnInit {
 
   showPermisos: boolean = false;
   permisosUsername: string = '';
-  ventanasDisponibles: string[] = ['Inventario', 'Ventas', 'Clientes', 'Reportes']; // Ajusta según tus ventanas
+  ventanasDisponibles: string[] = ['Inventario', 'Ventas', 'Clientes', 'Reportes','Empleados']; // Ajusta según tus ventanas
   
 
   ngOnInit(): void {
@@ -172,28 +175,69 @@ export default class UserComponent implements OnInit {
     });
   }
 
-
-  abrirPermisos(username: string) {
+  abrirPanelPermisos(id_usuario?: number) {
     this.showPermisos = true;
-    this.permisosUsername = username;
-  
-    // Puedes cargar permisos existentes aquí si los estás guardando en base de datos
-    this.permisoSeleccionado = {
-      ventana: '',
-      ver: false,
-      insertar: false,
-      editar: false,
-      eliminar: false,
-    };
+    this._usuarioservices.getUser(id_usuario!).subscribe((data) => {
+      this.newUsername = data.username;
+      this.abrirPermisos();
+    });
   }
+
+abrirPermisos() {
+  this._usuarioservices.get_permisos_user(this.newUsername).subscribe({
+    next: (response: any) => {
+      this.permisos = response.permisos || [];
+      if (this.permisos.length > 0) {
+        this.permisoSeleccionado.ventana = this.permisos[0].ventana || this.ventanasDisponibles[0];
+        this.cargarPermisoVentanaSeleccionada();
+      } else {
+        this.permisoSeleccionado.ventana = this.ventanasDisponibles[0];
+        this.resetearPermisosCheckboxes();
+      }
+    },
+    error: (error) => {
+      console.error('Error al obtener permisos:', error);
+      this.permisos = [];
+    }
+  });
+}
   guardarPermiso() {
-    console.log(`Guardando permisos para ${this.permisosUsername}`, this.permisoSeleccionado);
-    this.toastr.success('Permisos guardados exitosamente');
-    this.showPermisos = false;
+    this.permisoSeleccionado.username = this.newUsername;
+    this._usuarioservices.insert_permisos(this.permisoSeleccionado).subscribe(()=>{ 
+      this.toastr.success('Permisos guardados exitosamente');
+      this.showPermisos = false;
+    });
   }
   
   cancelarPermisos() {
     this.showPermisos = false;
   }
+  
+
+  cargarPermisoVentanaSeleccionada() {
+    if (!this.permisoSeleccionado.ventana || !this.newUsername) {
+      return this.resetearPermisosCheckboxes();
+    }
+  
+    // Encuentra el permiso para la ventana actual
+    const permiso = this.permisos.find(p => 
+      p.ventana === this.permisoSeleccionado.ventana
+    );
+  
+    // Actualiza los checkboxes (usando valores por defecto false si no existe)
+    this.permisoSeleccionado.ver = permiso?.ver ?? false;
+    this.permisoSeleccionado.insertar = permiso?.insertar ?? false;
+    this.permisoSeleccionado.editar = permiso?.editar ?? false;
+    this.permisoSeleccionado.eliminar = permiso?.eliminar ?? false;
+  }
+
+  resetearPermisosCheckboxes() {
+    this.permisoSeleccionado.ver = false;
+    this.permisoSeleccionado.insertar = false;
+    this.permisoSeleccionado.editar = false;
+    this.permisoSeleccionado.eliminar = false;
+  }
+  
+  
   
 }

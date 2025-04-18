@@ -51,7 +51,7 @@ def register(request):
 @api_view(['POST'])
 def agregar_permiso(request):
     username = request.data.get('username')
-    tipo_crear = request.data.get('crear')
+    tipo_insertar = request.data.get('insertar')
     tipo_editar = request.data.get('editar')
     tipo_eliminar = request.data.get('eliminar')
     tipo_ver = request.data.get('ver')
@@ -65,12 +65,29 @@ def agregar_permiso(request):
         with connection.cursor() as cursor:
             cursor.execute(
                 "CALL insertar_permisos(%s, %s, %s, %s, %s, %s)", 
-                [username, tipo_ventana, tipo_crear, tipo_editar, tipo_eliminar, tipo_ver]
+                [username, tipo_ventana, tipo_insertar, tipo_editar, tipo_eliminar, tipo_ver]
             )
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     return Response({'mensaje': 'Permiso agregado con éxito'}, status=status.HTTP_200_OK)
+
+
+
+@api_view(['GET'])
+def obtener_permisos_usuario(request, username):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM get_permisos_usuario(%s)", [username])
+            columnas = [col[0] for col in cursor.description]
+            resultados = [
+                dict(zip(columnas, fila))
+                for fila in cursor.fetchall()
+            ]
+            return Response({'permisos': resultados}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
 @api_view(['POST'])
@@ -113,4 +130,5 @@ def obtener_username_por_email(request, email):
             return Response({'username': username}, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
+    
 

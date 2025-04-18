@@ -4,6 +4,7 @@ import { Usuario } from '../../interface/user';
 import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
+import { Permisos } from '../../interface/permisos';
 
 @Injectable({
   providedIn: 'root'
@@ -64,6 +65,14 @@ export class LoginService {
 
   new_password(username: String, password: String):Observable<string> {
     return this.http.post<string>(`${this.myAppUrl}${this.myApiUrl}/newPassword/${username}`,{password});
+  }
+
+  insert_permisos(permisos: Permisos):Observable<void> {
+    return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}/permisos`,permisos);
+  }
+
+  get_permisos_user(username: string):Observable<Permisos[]> {
+    return this.http.get<Permisos[]>(`${this.myAppUrl}${this.myApiUrl}/getpermisosUser/${username}`,{});
   }
   
 }
