@@ -41,7 +41,7 @@
           <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Usuarios</p>
         </button>
       </li>
-  
+
 
       <li>
         <!-- Botón Principal de Productos -->
@@ -85,6 +85,49 @@
               clip-rule="evenodd" />
           </svg>
           <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Inventarios</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/sales"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          type="button">
+          <!-- Ícono Ventas -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path fill-rule="evenodd"
+              d="M7 4V2a1 1 0 112 0v2h6V2a1 1 0 112 0v2h2a1 1 0 01.8 1.6l-1.9 4.4A1 1 0 0115 12H9a1 1 0 01-.9-.6L6.1 7.6a1 1 0 01.8-1.6h2.1zM5 18a3 3 0 100 6 3 3 0 000-6zm14 0a3 3 0 100 6 3 3 0 000-6zm-4 0a1 1 0 110 2 1 1 0 010-2z"
+              clip-rule="evenodd" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Ventas</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/customers"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          type="button">
+          <!-- Ícono Clientes -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path
+              d="M12 4a3 3 0 110 6 3 3 0 010-6zm-5 1.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zm10 0a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM12 12c-3.33 0-6 2.69-6 6 0 .28.22.5.5.5h11c.28 0 .5-.22.5-.5 0-3.31-2.67-6-6-6zm-7.5 1c-1.6 0-3 1.4-3 3 0 .28.22.5.5.5h4c.28 0 .5-.22.5-.5 0-1.6-1.4-3-3-3zm15 0c-1.6 0-3 1.4-3 3 0 .28.22.5.5.5h4c.28 0 .5-.22.5-.5 0-1.6-1.4-3-3-3z" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Clientes</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/reports"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          type="button">
+          <!-- Ícono Reportes -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path
+              d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V8.83a2 2 0 00-.59-1.41l-4.83-4.83A2 2 0 0014.17 2H5zm9 1.5L19.5 10H15a1 1 0 01-1-1V4.5zM7 13h2v5H7v-5zm4-3h2v8h-2v-8zm4 4h2v4h-2v-4z" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Reportes</p>
         </button>
       </li>
     </ul>
@@ -201,14 +244,56 @@
           <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Inventarios</p>
         </button>
       </li>
+
+      <li>
+        <button routerLink="/sales"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          (click)="closeMenu()">
+          <!-- Ícono Ventas (Carrito de compras) -->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path fill-rule="evenodd"
+              d="M7 4V2a1 1 0 112 0v2h6V2a1 1 0 112 0v2h2a1 1 0 01.8 1.6l-1.9 4.4A1 1 0 0115 12H9a1 1 0 01-.9-.6L6.1 7.6a1 1 0 01.8-1.6h2.1zM5 18a3 3 0 100 6 3 3 0 000-6zm14 0a3 3 0 100 6 3 3 0 000-6zm-4 0a1 1 0 110 2 1 1 0 010-2z"
+              clip-rule="evenodd" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Ventas</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/customers"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          (click)="closeMenu()">
+          <!-- Ícono Cliente-->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path
+              d="M12 4a3 3 0 110 6 3 3 0 010-6zm-5 1.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5zm10 0a2.5 2.5 0 110 5 2.5 2.5 0 010-5zM12 12c-3.33 0-6 2.69-6 6 0 .28.22.5.5.5h11c.28 0 .5-.22.5-.5 0-3.31-2.67-6-6-6zm-7.5 1c-1.6 0-3 1.4-3 3 0 .28.22.5.5.5h4c.28 0 .5-.22.5-.5 0-1.6-1.4-3-3-3zm15 0c-1.6 0-3 1.4-3 3 0 .28.22.5.5.5h4c.28 0 .5-.22.5-.5 0-1.6-1.4-3-3-3z" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Clientes</p>
+        </button>
+      </li>
+
+      <li>
+        <button routerLink="/reports"
+          routerLinkActive="bg-gradient-to-tr from-blue-600 to-blue-400 shadow-md shadow-blue-500/20 hover:shadow-lg hover:shadow-blue-500/40 active:opacity-[0.85]"
+          class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white w-full flex items-center gap-4 px-4 capitalize"
+          (click)="closeMenu()">
+          <!-- Ícono Reporte-->
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-inherit">
+            <path
+              d="M5 3a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V8.83a2 2 0 00-.59-1.41l-4.83-4.83A2 2 0 0014.17 2H5zm9 1.5L19.5 10H15a1 1 0 01-1-1V4.5zM7 13h2v5H7v-5zm4-3h2v8h-2v-8zm4 4h2v4h-2v-4z" />
+          </svg>
+          <p class="block font-sans text-base leading-relaxed text-inherit font-medium capitalize">Reportes</p>
+        </button>
+      </li>
     </ul>
 
     <!--parte de cerrar sesión-->
     <ul class="mb-4">
       <li>
         <a class="" href="#">
-          <button
-            (click)="logout()"
+          <button (click)="logout()"
             class="middle none font-sans font-bold center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none text-xs py-3 rounded-lg text-white hover:bg-white/10 active:bg-white/30 w-full flex items-center gap-4 px-4 capitalize"
             type="button">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"

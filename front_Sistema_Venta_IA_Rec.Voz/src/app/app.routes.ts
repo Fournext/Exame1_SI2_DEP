@@ -57,6 +57,18 @@ export const routes: Routes = [
                 path: 'category',
                 loadComponent: () => import('./business/category/category.component')
             },
+            {
+                path: 'sales',
+                loadComponent: () => import('./business/sales/sales.component')
+            },
+            {
+                path: 'customers',
+                loadComponent: () => import('./business/customers/customers.component')
+            },
+            {
+                path: 'reports',
+                loadComponent: () => import('./business/reports/reports.component')
+            },
             /*
             {
                 path: '',

@@ -98,7 +98,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',  # Usa el backend de PostgreSQL
         'NAME': os.getenv('POSTGRES_DB', 'DB_PuntoVenta'),
         'USER': os.getenv('POSTGRES_USER', 'postgres'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', '071104'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', '123456'),
         'HOST': os.getenv('POSTGRES_HOST_LOCAL', 'localhost'),  # Nombre del servicio en docker-compose
         'PORT': os.getenv('POSTGRES_PORT', '5432'),
     
