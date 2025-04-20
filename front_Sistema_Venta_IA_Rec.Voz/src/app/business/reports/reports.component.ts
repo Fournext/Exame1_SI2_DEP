@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver' // Necesario para descargar el archivo
 
 interface Producto {
   nombre: string;
@@ -49,11 +51,13 @@ export default class ReportsComponent {
   reporteGenerado = false;
 
   generarReporte() {
+    // Validar cliente seleccionado
     if (!this.filtros.cliente) {
       alert('Por favor, selecciona un cliente.');
       return;
     }
 
+    // Validar rango de fechas
     if (!this.filtros.fechaInicio || !this.filtros.fechaFin) {
       alert('Por favor, selecciona un rango de fechas válido.');
       return;
@@ -62,6 +66,7 @@ export default class ReportsComponent {
     const fechaInicio = new Date(this.filtros.fechaInicio);
     const fechaFin = new Date(this.filtros.fechaFin);
 
+    // Buscar cliente seleccionado
     this.clienteSeleccionado = this.clientes.find(cliente => cliente.id === +this.filtros.cliente);
 
     // Filtrar compras según el rango de fechas
@@ -73,9 +78,9 @@ export default class ReportsComponent {
           { nombre: 'Producto A', cantidad: 2, precioUnitario: 100, total: 200 },
           { nombre: 'Producto B', cantidad: 1, precioUnitario: 150, total: 150 }
         ],
-        totalCompra: 350,
-        subtotal: 350, // Calculado como la suma de los importes
-        descuento: 50 // Ejemplo de descuento aplicado
+        totalCompra: 300, // Incluye descuento
+        subtotal: 350,
+        descuento: 50
       },
       {
         fecha: '2025-04-05',
@@ -83,19 +88,32 @@ export default class ReportsComponent {
         productos: [
           { nombre: 'Producto C', cantidad: 3, precioUnitario: 50, total: 150 }
         ],
-        totalCompra: 150,
-        subtotal: 150, // Calculado como la suma de los importes
-        descuento: 20 // Ejemplo de descuento aplicado
+        totalCompra: 130, // Incluye descuento
+        subtotal: 150,
+        descuento: 20
       }
     ].filter(compra => {
       const fechaCompra = new Date(compra.fecha);
       return fechaCompra >= fechaInicio && fechaCompra <= fechaFin;
     });
 
+    // Calcular el Total Gastado como la suma de los "totalCompra" (valor ajustado por descuento)
     this.totalGastado = this.reporte.reduce((sum, compra) => sum + compra.totalCompra, 0);
+
+    // Calcular el total de compras y promedio de gasto por compra
     this.totalCompras = this.reporte.length;
-    this.promedioGasto = this.totalGastado / this.totalCompras;
+    this.promedioGasto = this.totalCompras > 0 ? this.totalGastado / this.totalCompras : 0;
+
+    // Reporte generado exitosamente
     this.reporteGenerado = true;
+
+    // Mostrar resultados para depuración
+    console.log('Cliente seleccionado: ', this.clienteSeleccionado);
+    console.log('Rango de fechas: ', fechaInicio, fechaFin);
+    console.log('Reporte generado: ', this.reporte);
+    console.log('Total gastado: ', this.totalGastado);
+    console.log('Total compras: ', this.totalCompras);
+    console.log('Promedio gasto: ', this.promedioGasto);
   }
 
   exportarPDF() {
@@ -204,6 +222,123 @@ export default class ReportsComponent {
 
     // Guardar el PDF
     doc.save('reporte-cliente.pdf');
+  }
+
+  exportarExcel() {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Reporte de Ventas');
+
+    // **Título Principal (Con Celdas Combinadas)**
+    worksheet.mergeCells('A1:H1'); // Combinar celdas desde Fecha (A) hasta Total (H)
+    const titleRow = worksheet.getRow(1); // Primera fila
+    titleRow.getCell(1).value = 'Reporte compra cliente'; // Título único
+    titleRow.getCell(1).font = { bold: true, size: 16 }; // Texto en negrita y más grande
+    titleRow.getCell(1).alignment = { horizontal: 'center', vertical: 'middle' }; // Centrado perfecto
+    titleRow.height = 20; // Ajustar altura de la fila para dar más espacio visual
+
+    // **Espacio debajo del título**
+    worksheet.addRow([]); // Fila vacía
+
+    // **Información del Cliente**
+    const clienteInfo = [
+      ['Nombre:', this.clienteSeleccionado?.nombre || 'N/A'],
+      ['Correo:', this.clienteSeleccionado?.email || 'N/A'],
+      ['Total Gastado:', `${this.totalGastado.toFixed(2)} Bs`],
+      ['Total Compras:', this.totalCompras]
+    ];
+    clienteInfo.forEach((info) => {
+      const row = worksheet.addRow(info);
+      row.eachCell((cell, colNumber) => {
+        cell.alignment = { vertical: 'middle', horizontal: colNumber === 1 ? 'right' : 'left' }; // Alineación del texto
+        if (colNumber === 1) {
+          cell.font = { bold: true }; // Negrita para los títulos de la información
+        }
+      });
+    });
+
+    // **Espacio entre la información del cliente y la tabla**
+    worksheet.addRow([]); // Fila vacía
+
+    // **Fila de Títulos de la Tabla**
+    const tableTitles = ['Fecha', 'Producto', 'Cantidad', 'Precio Unitario', 'Importe', 'Subtotal', 'Descuento', 'Total'];
+    const titlesRow = worksheet.addRow(tableTitles); // Esta fila es parte de los datos
+    titlesRow.eachCell((cell) => {
+      cell.font = { bold: true, size: 12 }; // Negrita para los títulos de las columnas
+      cell.alignment = { vertical: 'middle', horizontal: 'center' }; // Centrado
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF007ACC' } // Fondo azul
+      };
+      cell.border = {
+        top: { style: 'thin', color: { argb: 'FF000000' } },
+        left: { style: 'thin', color: { argb: 'FF000000' } },
+        bottom: { style: 'thin', color: { argb: 'FF000000' } },
+        right: { style: 'thin', color: { argb: 'FF000000' } }
+      };
+    });
+
+    // **Llenar los Datos con Fusión de Celdas**
+    let currentRow = worksheet.rowCount + 1; // Empieza después de los títulos de la tabla
+    let isGray = true; // Alternar colores por fila
+
+    this.reporte.forEach((compra) => {
+      const firstRow = currentRow; // Fila inicial de la compra
+
+      compra.productos.forEach((producto, index) => {
+        const row = worksheet.addRow([
+          index === 0 ? compra.fecha : '', // Fecha solo para la primera fila de productos de esta compra
+          producto.nombre,
+          producto.cantidad,
+          producto.precioUnitario,
+          producto.total,
+          index === 0 ? compra.subtotal : '', // Subtotal solo para la primera fila
+          index === 0 ? compra.descuento : '', // Descuento solo para la primera fila
+          index === 0 ? compra.subtotal - compra.descuento : '' // Total solo para la primera fila
+        ]);
+
+        const rowColor = isGray ? 'FFD3D3D3' : 'FFFFFFFF'; // Alternar entre gris y blanco
+        row.eachCell((cell, colNumber) => {
+          cell.fill = {
+            type: 'pattern',
+            pattern: 'solid',
+            fgColor: { argb: rowColor }
+          };
+
+          cell.border = {
+            top: { style: 'thin', color: { argb: 'FF000000' } },
+            left: { style: 'thin', color: { argb: 'FF000000' } },
+            bottom: { style: 'thin', color: { argb: 'FF000000' } },
+            right: { style: 'thin', color: { argb: 'FF000000' } }
+          };
+
+          cell.alignment = { vertical: 'middle', horizontal: 'center' }; // Centrar texto en la celda
+        });
+
+        currentRow++; // Incrementar la fila actual
+      });
+
+      const lastRow = currentRow - 1; // Última fila de la compra
+
+      // **Fusionar celdas para las columnas específicas**
+      worksheet.mergeCells(`A${firstRow}:A${lastRow}`); // Fusionar columna Fecha
+      worksheet.mergeCells(`F${firstRow}:F${lastRow}`); // Fusionar columna Subtotal
+      worksheet.mergeCells(`G${firstRow}:G${lastRow}`); // Fusionar columna Descuento
+      worksheet.mergeCells(`H${firstRow}:H${lastRow}`); // Fusionar columna Total
+
+      isGray = !isGray; // Alternar el color de las filas
+    });
+
+    // **Ajustar el ancho de las columnas automáticamente**
+    worksheet.columns.forEach((column) => {
+      column.width = 15; // Ajustar el ancho de cada columna
+    });
+
+    // **Generar y Descargar el Archivo Excel**
+    workbook.xlsx.writeBuffer().then((data) => {
+      const blob = new Blob([data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      saveAs(blob, 'reporte-cliente.xlsx');
+    });
   }
 }
 
