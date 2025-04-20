@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ToastrService } from 'ngx-toastr';
 import { Permisos } from '../../interface/permisos';
+import { Empleado } from '../../interface/empleado';
 
 @Injectable({
   providedIn: 'root'
@@ -76,5 +77,35 @@ export class LoginService {
   }
   get_permisos_user_ventana(username: string,ventana: string):Observable<any> {
     return this.http.get<any>(`${this.myAppUrl}${this.myApiUrl}/getpermisosUser_Ventana/${username}/${ventana}`,{});
+  }
+  actualizarEmpleadoUsuario(emepleado:Empleado):Observable<any> {
+    return this.http.post<any>(`${this.myAppUrl}${this.myApiUrl}/actualizarEmpleadoUsuario`,emepleado);
+  }
+
+  insertarURL(id_usuario:number,url:string):Observable<any> {
+    return this.http.post<any>(`${this.myAppUrl}${this.myApiUrl}/insertarURL`,{id_usuario,url});
+  }
+  getURL(id_usuario:number):Observable<any> {
+    return this.http.get<any>(`${this.myAppUrl}${this.myApiUrl}/getURL/${id_usuario}`);
+  }
+
+  subirImagen(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'Examen1_S12'); 
+    formData.append('cloud_name', 'dmfl4ahiy');        
+  
+    return new Observable<string>((observer) => {
+      this.http.post<any>('https://api.cloudinary.com/v1_1/dmfl4ahiy/image/upload', formData)
+        .subscribe({
+          next: (res) => {
+            observer.next(res.secure_url);  // devolvemos la URL segura
+            observer.complete();
+          },
+          error: (err) => {
+            observer.error(err);
+          }
+        });
+    });
   }
 }

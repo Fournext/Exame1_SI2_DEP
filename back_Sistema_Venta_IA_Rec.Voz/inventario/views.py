@@ -69,3 +69,25 @@ def eliminar_inventario(request, id_inventario):
         return Response({'message': 'Inventario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
     except IntegrityError:
         return Response({'message': 'No se puede eliminar este inventario porque está siendo usada por productos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def obtener_ultimo_inventario(request, id_producto):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT * FROM obtener_ultimo_inventario(%s)", [id_producto])
+            row = cursor.fetchone()
+
+            if row is None:
+                return Response({'mensaje': 'No se encontró inventario para este producto'}, status=status.HTTP_404_NOT_FOUND)
+
+            inventario = {
+                'id_inventario': row[0],
+                'fecha': row[1].isoformat(),
+                'cantidad': row[2]
+            }
+
+            return Response(inventario, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

@@ -1,10 +1,10 @@
-export interface Empleado{
+export interface Cliente{
+    id?: number;
     id_usuario?: number;
+    nombre?: String;
     nombre_completo: string;
     direccion: string;
     telefono: string;
-    rol: string;
-    fecha_nacimiento: Date;
     estado: string;
     username?: string;
     email?:string;

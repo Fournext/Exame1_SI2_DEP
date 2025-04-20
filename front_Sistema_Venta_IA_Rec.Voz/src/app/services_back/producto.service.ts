@@ -43,4 +43,30 @@ export class ProductoService {
   eliminar_Producto(id_producto: string):Observable<void> {
     return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}/eliminar/${id_producto}`,{});
   }
+  
+  insertar_imagenProducto(id_producto: string,url: string):Observable<void> {
+    return this.http.post<void>(`${this.myAppUrl}${this.myApiUrl}/insertarImagen`,{id_producto,url});
+  }
+
+  subirImagen(file: File): Observable<string> {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'Examen1_S12'); 
+    formData.append('cloud_name', 'dmfl4ahiy');        
+  
+    return new Observable<string>((observer) => {
+      this.http.post<any>('https://api.cloudinary.com/v1_1/dmfl4ahiy/image/upload', formData)
+        .subscribe({
+          next: (res) => {
+            observer.next(res.secure_url);  // devolvemos la URL segura
+            observer.complete();
+          },
+          error: (err) => {
+            observer.error(err);
+          }
+        });
+    });
+  }
+  
+  
 }

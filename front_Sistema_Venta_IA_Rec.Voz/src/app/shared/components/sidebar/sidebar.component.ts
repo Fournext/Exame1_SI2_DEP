@@ -4,6 +4,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MenuService } from '../../services/menu/menu.component';
 import { AuthService } from '../../services/auth/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-sidebar',
@@ -20,6 +21,7 @@ export class SidebarComponent implements OnInit {
   constructor(
     private menuService: MenuService,
     private router: Router,
+    private toastr: ToastrService,
     private authService: AuthService // Inyecta AuthService para gestionar roles
   ) { }
 
@@ -79,9 +81,14 @@ export class SidebarComponent implements OnInit {
   }
 
   logout() {
-    // Aquí haces el cierre de sesión
+    // Limpiar todo el localStorage
     localStorage.clear();
-    this.router.navigate(['/login']);
-  }
+    localStorage.removeItem('token');
+  
+    // Redirigir al login u otra página inicial
+    window.location.href = '/login';
+    // Mensaje opcional
+    this.toastr.info('Sesión cerrada correctamente');
+  }  
   
 }

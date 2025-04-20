@@ -155,3 +155,78 @@ def obtener_username_por_email(request, email):
         return Response({'error': str(e)}, status=status.HTTP_404_NOT_FOUND)
     
 
+@api_view(['GET'])
+def obtener_tipo_usuario(request, username):
+    try:
+        usuario = Usuario.objects.get(username=username)
+        return Response({'tipo_usuario': usuario.tipo_usuario}, status=status.HTTP_200_OK)
+    except Usuario.DoesNotExist:
+        return Response({'error': 'Usuario no encontrado'}, status=status.HTTP_404_NOT_FOUND)
+
+    
+
+@api_view(['POST'])
+def editar_empleado_usuario(request):
+    try:
+        data = request.data
+        id_usuario = data.get('id_usuario')
+        nombre_empleado = data.get('nombre_completo')
+        email = data.get('email')
+        telefono = data.get('telefono')
+        direccion = data.get('direccion')
+        fecha_nacimiento = data.get('fecha_nacimiento')  # Asegúrate de que esté en formato 'YYYY-MM-DD'
+
+        # Validación rápida de campos requeridos
+        if not all([id_usuario, nombre_empleado, email, telefono, direccion, fecha_nacimiento]):
+            return Response({'error': 'Faltan parámetros requeridos'}, status=status.HTTP_400_BAD_REQUEST)
+
+        with connection.cursor() as cursor:
+            cursor.execute("""
+                CALL editar_empleado_usuario(%s, %s, %s, %s, %s, %s)
+            """, [
+                id_usuario,
+                nombre_empleado,
+                email,
+                telefono,
+                direccion,
+                fecha_nacimiento
+            ])
+
+        return Response({'mensaje': 'Empleado actualizado correctamente'}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(['POST'])
+def insertar_actualizar_imagen_usuario(request):
+    try:
+        data = request.data
+        id_usuario = data.get('id_usuario')
+        url = data.get('url')
+
+        if not id_usuario or not url:
+            return Response({'error': 'Faltan parámetros requeridos (id_usuario, url)'}, status=status.HTTP_400_BAD_REQUEST)
+
+        with connection.cursor() as cursor:
+            cursor.execute("CALL insertar_actualizar_imagen_usuario(%s, %s)", [id_usuario, url])
+
+        return Response({'mensaje': 'Imagen insertada o actualizada correctamente'}, status=status.HTTP_200_OK)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['GET'])
+def obtener_url_usuario(request, id_usuario):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT obtener_url_usuario(%s)", [id_usuario])
+            resultado = cursor.fetchone()
+
+        if resultado and resultado[0]:
+            return Response({'url': resultado[0]}, status=status.HTTP_200_OK)
+        else:
+            return Response({'mensaje': 'El usuario no tiene imagen registrada'}, status=status.HTTP_404_NOT_FOUND)
+
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

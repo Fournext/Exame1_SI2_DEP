@@ -42,6 +42,7 @@ export default class ProductComponent implements OnInit {
   getProducto() {
     this._productoServices.getProductos_Todo().subscribe((data)=>{
       this.productos = data;
+      this.productosFiltrados = [...this.productos]; // Inicializa filtrados con todos los producto
     })
   }
 
@@ -69,9 +70,20 @@ export default class ProductComponent implements OnInit {
     })
   }
 
+  aplicarFiltro() {
+    this.productosFiltrados = this.productos.filter(producto => {
+      const coincideMarca = this.filtroMarca ? producto.marca === this.filtroMarca : true;
+      const coincideCategoria = this.filtroCategoria ? producto.categoria === this.filtroCategoria : true;
+      return coincideMarca && coincideCategoria;
+    });
+  }
+
   productos: Producto[] = []; 
   categorias: Categoria[] = []; 
   marcas: Marca[] = []; 
+  productosFiltrados: Producto[] = [];
+  filtroMarca: string = '';
+  filtroCategoria: string = '';
 
   showForm = false;
   editar=false;
@@ -103,6 +115,12 @@ export default class ProductComponent implements OnInit {
   perm_eliminar: string = '';
   perm_ver: string = '';
 
+  newProductoIMG: any = {
+    imagen: ''
+  };
+  previewImageUrl: string = '';
+  selectedImage: File | null = null;
+
   toggleForm() {
     this.showForm = !this.showForm;
     this.limpiarCampos();
@@ -120,15 +138,46 @@ export default class ProductComponent implements OnInit {
     };
   }
 
+  onImageSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.selectedImage = file; // Guarda el archivo seleccionado
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewImageUrl = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+  
+
   addProduct() {
     if(!this.editar){
       this._productoServices.insertar_productos(this.newProducto).subscribe((data)=>{
         this.toastr.success('Producto registrado con éxito', 'Registro exitoso');
+        this.onImageSelected(Event)
         this.showForm = false; // Ocultar formulario después de agregar
         this.getProducto(); 
       })
     }else{
       this._productoServices.actualizar_Producto(this.newProducto).subscribe((data)=>{
+
+        // Solo subimos la imagen si se ha seleccionado una nueva imagen
+        if (this.selectedImage) {
+          this._productoServices.subirImagen(this.selectedImage).subscribe({
+            next: (url: string) => {
+              this.newProductoIMG.imagen = url;
+              this._productoServices.insertar_imagenProducto(String(this.newProducto.id), url).subscribe(() => {
+                this.toastr.success('Imagen de producto actualizada con éxito', 'Guardado exitoso');
+              });
+            },
+            error: (err) => {
+              console.error('Error al subir imagen:', err);
+            }
+          });
+        }
+
+
         this.toastr.success('Producto Actualizado con éxito', 'Actualizacion exitoso');
         this.showForm = false; // Ocultar formulario después de agregar
         this.editar=false;
