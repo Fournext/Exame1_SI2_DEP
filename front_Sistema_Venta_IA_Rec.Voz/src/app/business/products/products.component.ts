@@ -42,6 +42,7 @@ export default class ProductComponent implements OnInit {
   getProducto() {
     this._productoServices.getProductos_Todo().subscribe((data)=>{
       this.productos = data;
+      this.productosFiltrados = [...this.productos]; // Inicializa filtrados con todos los producto
     })
   }
 
@@ -69,9 +70,20 @@ export default class ProductComponent implements OnInit {
     })
   }
 
+  aplicarFiltro() {
+    this.productosFiltrados = this.productos.filter(producto => {
+      const coincideMarca = this.filtroMarca ? producto.marca === this.filtroMarca : true;
+      const coincideCategoria = this.filtroCategoria ? producto.categoria === this.filtroCategoria : true;
+      return coincideMarca && coincideCategoria;
+    });
+  }
+
   productos: Producto[] = []; 
   categorias: Categoria[] = []; 
   marcas: Marca[] = []; 
+  productosFiltrados: Producto[] = [];
+  filtroMarca: string = '';
+  filtroCategoria: string = '';
 
   showForm = false;
   editar=false;
@@ -154,5 +166,4 @@ export default class ProductComponent implements OnInit {
       this.toastr.error(error.error.message, 'Error al eliminar el Producto');
     })
   }
-
 }
